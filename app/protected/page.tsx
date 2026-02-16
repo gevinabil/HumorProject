@@ -1,35 +1,39 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
-  if (!data.user) redirect("/");
+  if (!data.user) {
+    redirect("/");
+  }
 
   return (
-    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 32 }}>
-      <div style={{ width: "min(720px, 100%)" }}>
-        <h1 style={{ fontSize: 44, marginBottom: 8 }}>Welcome</h1>
-        <p style={{ opacity: 0.7, marginBottom: 24 }}>Choose a week:</p>
+    <main className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-900 text-white p-16">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-6xl font-bold mb-6">Welcome back.</h1>
+        <p className="text-xl text-gray-400 mb-16">Choose a week below.</p>
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <Link href="/week-1" style={btnStyle}>Week 1</Link>
-          <Link href="/week-2" style={btnStyle}>Week 2</Link>
+        <div className="grid md:grid-cols-2 gap-10">
+          <Link href="/week-1">
+            <div className="p-10 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition cursor-pointer">
+              <h2 className="text-3xl font-semibold">Week 1</h2>
+              <p className="text-gray-400 mt-2">Hello World</p>
+            </div>
+          </Link>
+
+          <Link href="/week-2">
+            <div className="p-10 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition cursor-pointer">
+              <h2 className="text-3xl font-semibold">Week 2</h2>
+              <p className="text-gray-400 mt-2">Connecting the Database</p>
+            </div>
+          </Link>
         </div>
       </div>
     </main>
   );
 }
-
-const btnStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "14px 18px",
-  borderRadius: 12,
-  border: "1px solid #ddd",
-  textDecoration: "none",
-  fontWeight: 600,
-};
