@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { createRouteClient } from "@/lib/supabase/server";
 
+type VoteRequest = {
+  caption_id?: unknown;
+  vote?: unknown;
+};
+
 export async function POST(req: Request) {
   try {
     const supabase = await createRouteClient();
@@ -12,11 +17,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const body = await req.json();
-    const caption_id = body?.caption_id;
-    const vote = body?.vote; // expected: 1 or -1
+    const body = (await req.json()) as VoteRequest;
+    const caption_id = body.caption_id;
+    const vote = body.vote; // expected: 1 or -1
 
-    if (!caption_id || (vote !== 1 && vote !== -1)) {
+    if (
+      typeof caption_id !== "string" ||
+      caption_id.length === 0 ||
+      (vote !== 1 && vote !== -1)
+    ) {
       return NextResponse.json({ error: "Bad request" }, { status: 400 });
     }
 
@@ -32,7 +41,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Server error" }, { status: 500 });
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

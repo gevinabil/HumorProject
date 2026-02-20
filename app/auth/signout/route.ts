@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createRouteClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
-  const supabase = await createClient()
+  const supabase = await createRouteClient()
   await supabase.auth.signOut()
   return NextResponse.redirect(new URL('/', request.url))
 }

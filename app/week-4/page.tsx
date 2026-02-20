@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import VoteButtons from "./VoteButtons";
+import VotingQueue, { type VoteItem } from "./VotingQueue";
 
 export const dynamic = "force-dynamic";
+const CAPTIONS_TABLE = "captions";
+const IMAGES_TABLE = "images";
 
 type CaptionRow = {
   id: string;
-  caption: string | null;
-  explanation: string | null;
+  content: string | null;
+  image_id: string | null;
+};
+
+type ImageRow = {
+  id: string;
+  url: string | null;
+  image_description: string | null;
 };
 
 export default async function Week4Page() {
@@ -17,11 +25,46 @@ export default async function Week4Page() {
 
   if (!auth?.user) redirect("/");
 
-  // Read captions (same table you used in Week 2)
+  // Read caption rows to keep vote IDs aligned with caption_votes.caption_id.
   const { data: captions, error } = await supabase
-    .from("captions")
-    .select("id, caption, explanation")
+    .from(CAPTIONS_TABLE)
+    .select("id, content, image_id")
     .order("id", { ascending: false });
+
+  // Pair captions with images by image_id -> images.id.
+  const imageIds = Array.from(
+    new Set(
+      (captions ?? [])
+        .map((row) => (row as CaptionRow).image_id)
+        .filter((id): id is string => typeof id === "string" && id.length > 0)
+    )
+  );
+
+  let imagesById = new Map<string, ImageRow>();
+  if (imageIds.length > 0) {
+    const { data: images } = await supabase
+      .from(IMAGES_TABLE)
+      .select("id, url, image_description")
+      .in("id", imageIds);
+
+    imagesById = new Map(
+      ((images as ImageRow[] | null) ?? []).map((row) => [row.id, row])
+    );
+  }
+
+  const items: VoteItem[] = ((captions as CaptionRow[] | null) ?? [])
+    .map((row) => {
+      const linkedImage = row.image_id ? imagesById.get(row.image_id) : undefined;
+      const caption = row.content ?? linkedImage?.image_description ?? "No caption";
+      const explanation = linkedImage?.image_description ?? null;
+
+      return {
+        id: row.id,
+        caption,
+        explanation,
+        imageUrl: linkedImage?.url ?? null,
+      };
+    });
 
   return (
     <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">
@@ -44,9 +87,7 @@ export default async function Week4Page() {
         <div className="mt-10">
           <p className="text-white/60 text-sm mb-2">Week 4</p>
           <h1 className="text-5xl font-bold">Mutating Data</h1>
-          <p className="text-white/60 mt-3">
-            Vote on captions. Votes are inserted into <span className="text-white/80">caption_votes</span>.
-          </p>
+          <p className="text-white/60 mt-3">Rate each caption as Yes or No.</p>
         </div>
 
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
@@ -64,37 +105,12 @@ export default async function Week4Page() {
               </div>
             )}
 
-            {!error && (!captions || captions.length === 0) && (
+            {!error && items.length === 0 && (
               <div className="text-white/60 text-sm">No captions found.</div>
             )}
 
-            {!!captions?.length && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="text-white/60">
-                    <tr className="border-b border-white/10">
-                      <th className="text-left py-3 pr-4 w-[22%]">ID</th>
-                      <th className="text-left py-3 pr-4 w-[28%]">Caption</th>
-                      <th className="text-left py-3 pr-4 w-[30%]">Explanation</th>
-                      <th className="text-left py-3 w-[20%]">Rate</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(captions as CaptionRow[]).map((row) => (
-                      <tr key={row.id} className="border-b border-white/10">
-                        <td className="py-4 pr-4 text-white/60 font-mono text-xs">
-                          {row.id}
-                        </td>
-                        <td className="py-4 pr-4">{row.caption ?? ""}</td>
-                        <td className="py-4 pr-4 text-white/70">{row.explanation ?? ""}</td>
-                        <td className="py-4">
-                          <VoteButtons captionId={row.id} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            {!error && items.length > 0 && (
+              <VotingQueue items={items} />
             )}
           </div>
         </div>
