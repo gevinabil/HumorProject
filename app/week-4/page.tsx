@@ -14,7 +14,7 @@ type CaptionRow = {
 };
 
 type ImageRow = {
-  id: string;
+  id?: string | null;
   url: string | null;
   image_description: string | null;
 };
@@ -40,31 +40,49 @@ export default async function Week4Page() {
     )
   );
 
-  let imagesById = new Map<string, ImageRow>();
+  const imagesById = new Map<string, ImageRow>();
   if (imageIds.length > 0) {
-    const { data: images } = await supabase
-      .from(IMAGES_TABLE)
-      .select("id, url, image_description")
-      .in("id", imageIds);
+    const chunkSize = 100;
 
-    imagesById = new Map(
-      ((images as ImageRow[] | null) ?? []).map((row) => [row.id, row])
-    );
+    for (let i = 0; i < imageIds.length; i += chunkSize) {
+      const chunk = imageIds.slice(i, i + chunkSize);
+      const { data: images, error: imagesError } = await supabase
+        .from(IMAGES_TABLE)
+        .select("id, url, image_description")
+        .in("id", chunk);
+
+      if (imagesError) {
+        break;
+      }
+
+      for (const row of ((images as ImageRow[] | null) ?? [])) {
+        if (row.id) imagesById.set(row.id, row);
+      }
+    }
   }
 
-  const items: VoteItem[] = ((captions as CaptionRow[] | null) ?? [])
-    .map((row) => {
+  const items: VoteItem[] = ((captions as CaptionRow[] | null) ?? []).reduce<VoteItem[]>(
+    (acc, row) => {
       const linkedImage = row.image_id ? imagesById.get(row.image_id) : undefined;
       const caption = row.content ?? linkedImage?.image_description ?? "No caption";
       const explanation = linkedImage?.image_description ?? null;
+      const imageUrl = linkedImage?.url ?? null;
 
-      return {
+      if (!imageUrl) {
+        return acc;
+      }
+
+      acc.push({
         id: row.id,
         caption,
         explanation,
-        imageUrl: linkedImage?.url ?? null,
-      };
-    });
+        imageUrl,
+      });
+
+      return acc;
+    },
+    []
+  );
 
   return (
     <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">

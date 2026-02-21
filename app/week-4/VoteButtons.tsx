@@ -23,39 +23,51 @@ export default function VoteButtons({
         body: JSON.stringify({ caption_id: captionId, vote: v }),
       });
 
-      const json = await res.json();
+      const json: {
+        error?: string;
+        code?: string;
+        details?: string;
+        hint?: string;
+      } = await res.json();
 
       if (!res.ok) {
-        setMsg(json?.error ?? "Vote failed");
+        const detail = [json.error, json.code, json.details]
+          .filter(Boolean)
+          .join(" | ");
+        setMsg(detail || "Vote failed");
       } else {
         setMsg("Saved ✓");
-        onVoted?.();
+        setTimeout(() => {
+          onVoted?.();
+        }, 250);
       }
     } catch {
       setMsg("Network error");
     } finally {
       setLoading(false);
-      setTimeout(() => setMsg(null), 1200);
+      setTimeout(() => setMsg(null), 4000);
     }
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        disabled={loading}
-        onClick={() => vote(1)}
-        className="rounded-xl border border-emerald-300/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-50"
-      >
-        Yes
-      </button>
-      <button
-        disabled={loading}
-        onClick={() => vote(-1)}
-        className="rounded-xl border border-rose-300/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-100 hover:bg-rose-500/20 disabled:opacity-50"
-      >
-        No
-      </button>
-      {msg && <span className="text-xs text-white/60">{msg}</span>}
+    <div className="space-y-2">
+      <div className="flex items-center gap-3">
+        <button
+          disabled={loading}
+          onClick={() => vote(1)}
+          className="rounded-xl border border-emerald-300/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-50"
+        >
+          Yes
+        </button>
+        <button
+          disabled={loading}
+          onClick={() => vote(-1)}
+          className="rounded-xl border border-rose-300/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-100 hover:bg-rose-500/20 disabled:opacity-50"
+        >
+          No
+        </button>
+      </div>
+      {msg && <p className="text-xs text-white/70 break-words">{msg}</p>}
     </div>
   );
 }

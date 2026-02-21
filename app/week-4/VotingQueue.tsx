@@ -60,9 +60,6 @@ export default function VotingQueue({ items }: { items: VoteItem[] }) {
 
         <div className="space-y-4 p-5">
           <p className="text-sm leading-6 text-white/90">{current.caption}</p>
-          {current.explanation ? (
-            <p className="text-xs text-white/60">{current.explanation}</p>
-          ) : null}
           <VoteButtons
             captionId={current.id}
             onVoted={() => setIndex((value) => value + 1)}
