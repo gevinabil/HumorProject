@@ -1,9 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { createBrowserClientInstance } from "@/lib/supabase/browser";
+
+const BUTTON_POSITIONS = [
+  { x: 50, y: 34 },
+  { x: 24, y: 72 },
+  { x: 78, y: 58 },
+];
 
 export default function LoginPage() {
   const supabase = createBrowserClientInstance();
+  const [attempts, setAttempts] = useState(0);
+  const [buttonPosition, setButtonPosition] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   async function signIn() {
     await supabase.auth.signInWithOAuth({
@@ -12,6 +23,22 @@ export default function LoginPage() {
         redirectTo: `${location.origin}/auth/callback`,
       },
     });
+  }
+
+  async function handleSignInClick() {
+    if (loading) return;
+
+    if (attempts < 2) {
+      const nextAttempt = attempts + 1;
+      setAttempts(nextAttempt);
+      setButtonPosition(nextAttempt);
+      return;
+    }
+
+    setLoading(true);
+    setMessage("Welcome to Humor Project");
+    await new Promise((resolve) => setTimeout(resolve, 850));
+    await signIn();
   }
 
   return (
@@ -36,12 +63,24 @@ export default function LoginPage() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight">Sign in</h2>
           <p className="mt-2 text-sm text-black/65">Use Google to continue.</p>
 
-          <button
-            onClick={signIn}
-            className="mt-8 w-full rounded-md bg-[#ff1248] px-5 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-[0_10px_22px_rgba(255,18,72,.35)] hover:bg-[#ff2b5f] transition"
-          >
-            Continue with Google
-          </button>
+          <div className="relative mt-8 h-40 rounded-2xl border border-black/10 bg-white/70">
+            <button
+              onClick={handleSignInClick}
+              disabled={loading}
+              style={{
+                left: `${BUTTON_POSITIONS[buttonPosition].x}%`,
+                top: `${BUTTON_POSITIONS[buttonPosition].y}%`,
+                transform: "translate(-50%, -50%)",
+              }}
+              className="absolute rounded-md bg-[#ff1248] px-5 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-[0_10px_22px_rgba(255,18,72,.35)] hover:bg-[#ff2b5f] transition-all duration-500 disabled:opacity-80"
+            >
+              {loading ? "Redirecting..." : "Continue with Google"}
+            </button>
+          </div>
+
+          {message ? (
+            <p className="mt-4 text-sm font-semibold text-[#b50f37]">{message}</p>
+          ) : null}
         </section>
       </div>
     </main>

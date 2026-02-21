@@ -19,6 +19,15 @@ type ImageRow = {
   image_description: string | null;
 };
 
+function shuffleItems<T>(list: T[]): T[] {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 export default async function Week4Page() {
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
@@ -83,6 +92,7 @@ export default async function Week4Page() {
     },
     []
   );
+  const randomizedItems = shuffleItems(items);
 
   return (
     <div className="min-h-screen w-full bg-[#0b0b0e] text-white relative overflow-hidden">
@@ -139,12 +149,12 @@ export default async function Week4Page() {
               </div>
             )}
 
-            {!error && items.length === 0 && (
+            {!error && randomizedItems.length === 0 && (
               <div className="text-sm text-black/55">No captions found.</div>
             )}
 
-            {!error && items.length > 0 && (
-              <VotingQueue items={items} />
+            {!error && randomizedItems.length > 0 && (
+              <VotingQueue items={randomizedItems} />
             )}
           </div>
         </section>
