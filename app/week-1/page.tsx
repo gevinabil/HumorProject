@@ -115,23 +115,20 @@ export default function Week1Page() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">
-      {/* subtle glow background */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-80"
-        style={{
-          background:
-            "radial-gradient(900px 500px at 15% 25%, rgba(99,102,241,.25), transparent 60%), radial-gradient(900px 500px at 85% 35%, rgba(236,72,153,.18), transparent 60%), radial-gradient(1100px 600px at 50% 100%, rgba(34,197,94,.10), transparent 55%)",
-        }}
-      />
+    <div className="startup-shell">
+      <div className="pointer-events-none absolute right-[-180px] top-28 h-64 w-[500px] rotate-12 bg-gradient-to-r from-[#ff1248] to-[#ff3d6e] opacity-20" />
 
       <div className="absolute top-6 left-6 z-10">
         <Link
           href="/protected"
-          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/10 transition"
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-4 py-2 text-sm text-white/85 hover:text-white hover:bg-black/65 transition"
         >
           ← Back
         </Link>
+      </div>
+
+      <div className="absolute left-6 top-20 z-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#ff6f93]">Week 1</p>
       </div>
 
       {/* Bouncing element */}
@@ -144,19 +141,19 @@ export default function Week1Page() {
         }}
       >
         <div
-          className="rounded-3xl border border-white/10 bg-white/5 px-10 py-8 shadow-[0_0_80px_rgba(0,0,0,.55)] backdrop-blur-xl"
+          className="rounded-3xl border border-black/20 bg-[#f4f4f4] px-10 py-8 shadow-[0_18px_60px_rgba(0,0,0,.45)]"
           style={{
-            boxShadow: "0 0 0 1px rgba(255,255,255,.06) inset, 0 30px 100px rgba(0,0,0,.65)",
+            boxShadow: "0 0 0 1px rgba(0,0,0,.03) inset, 0 30px 90px rgba(0,0,0,.55)",
           }}
         >
-          <div className="text-xs tracking-widest text-white/50 mb-3">WEEK 1</div>
+          <div className="mb-3 text-xs tracking-widest text-[#ff1248]">WEEK 1</div>
           <div
             className="font-black leading-none"
             style={{
               fontSize: "clamp(56px, 6vw, 92px)", // BIG
               color,
               textShadow:
-                "0 0 22px rgba(255,255,255,.10), 0 0 40px rgba(0,0,0,.65)",
+                "0 0 20px rgba(255,255,255,.15), 0 0 36px rgba(0,0,0,.42)",
             }}
           >
             Hello World

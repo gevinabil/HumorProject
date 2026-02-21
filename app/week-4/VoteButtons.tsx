@@ -55,19 +55,19 @@ export default function VoteButtons({
         <button
           disabled={loading}
           onClick={() => vote(1)}
-          className="rounded-xl border border-emerald-300/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-50"
+          className="rounded-md bg-[#ff1248] px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-[0_10px_22px_rgba(255,18,72,.35)] hover:bg-[#ff2b5f] disabled:opacity-50 transition"
         >
-          Yes
+          {loading ? "Saving..." : "Yes"}
         </button>
         <button
           disabled={loading}
           onClick={() => vote(-1)}
-          className="rounded-xl border border-rose-300/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-100 hover:bg-rose-500/20 disabled:opacity-50"
+          className="rounded-md border border-black/15 bg-white px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-black/75 hover:bg-black/5 disabled:opacity-50 transition"
         >
-          No
+          {loading ? "Saving..." : "No"}
         </button>
       </div>
-      {msg && <p className="text-xs text-white/70 break-words">{msg}</p>}
+      {msg && <p className="text-xs text-black/60 break-words">{msg}</p>}
     </div>
   );
 }

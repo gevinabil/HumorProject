@@ -85,53 +85,69 @@ export default async function Week4Page() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-80 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(900px 500px at 15% 25%, rgba(99,102,241,.25), transparent 60%), radial-gradient(900px 500px at 85% 35%, rgba(236,72,153,.18), transparent 60%), radial-gradient(1100px 600px at 50% 100%, rgba(34,197,94,.10), transparent 55%)",
-        }}
-      />
+    <div className="min-h-screen w-full bg-[#0b0b0e] text-white relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_15%_12%,rgba(255,16,56,.20),transparent_65%),radial-gradient(1000px_500px_at_88%_8%,rgba(255,48,92,.12),transparent_65%)]" />
+      <div className="pointer-events-none absolute left-[-160px] top-20 h-64 w-[460px] -rotate-12 bg-gradient-to-r from-[#ff1248] to-[#ff3d6e] opacity-80" />
+      <div className="pointer-events-none absolute right-[-200px] top-36 h-72 w-[520px] rotate-12 bg-gradient-to-r from-[#ff1248] to-[#ff3d6e] opacity-25" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-24">
-        <Link
-          href="/protected"
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
-        >
-          ← Back
-        </Link>
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pb-24 pt-10 sm:pt-14">
+        <header className="flex items-center justify-between border-b border-white/10 pb-5">
+          <Link
+            href="/protected"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-4 py-2 text-sm font-medium text-white/80 hover:bg-black/50 hover:text-white transition"
+          >
+            ← Back
+          </Link>
+          <p className="hidden text-sm text-white/50 sm:block">{auth.user.email}</p>
+        </header>
 
-        <div className="mt-10">
-          <p className="text-white/60 text-sm mb-2">Week 4</p>
-          <h1 className="text-5xl font-bold">Mutating Data</h1>
-          <p className="text-white/60 mt-3">Rate each caption as Yes or No.</p>
-        </div>
-
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-            <div className="text-white/80 font-medium">Captions</div>
-            <div className="text-white/50 text-sm">
-              Logged in as {auth.user.email}
-            </div>
+        <section className="mt-10 grid gap-8 md:grid-cols-[1.2fr_.8fr] md:items-end">
+          <div>
+            <p className="inline-flex rounded-full border border-[#ff3d6e]/50 bg-[#ff1248]/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#ff6f93]">
+              Week 4 Challenge
+            </p>
+            <h1 className="mt-5 max-w-3xl text-5xl font-black uppercase leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
+              Vote The Caption.
+            </h1>
+            <p className="mt-4 max-w-xl text-white/65">
+              Review one image at a time and decide if the caption is a hit.
+            </p>
           </div>
 
-          <div className="p-6">
+          <div className="rounded-2xl border border-white/10 bg-black/40 p-5">
+            <p className="text-xs uppercase tracking-[0.18em] text-white/50">Session</p>
+            <p className="mt-2 text-lg font-semibold text-white/90">Caption Arena</p>
+            <p className="mt-1 text-sm text-white/60">Authenticated rating mode enabled.</p>
+          </div>
+        </section>
+
+        <section className="mt-12 overflow-hidden rounded-[28px] border border-black/10 bg-[#f4f4f4] text-[#111] shadow-[0_24px_80px_rgba(0,0,0,.45)]">
+          <div className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#ff1248]">
+                Matchday Panel
+              </p>
+              <p className="mt-1 text-sm font-semibold text-black/70">Caption vs Image</p>
+            </div>
+            <div className="text-xs text-black/50 sm:hidden">{auth.user.email}</div>
+          </div>
+
+          <div className="bg-[linear-gradient(0deg,rgba(0,0,0,.035)_1px,transparent_1px)] bg-[length:100%_22px] p-6 sm:p-8">
             {error && (
-              <div className="text-red-300 text-sm">
+              <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-900">
                 Failed to load captions: {error.message}
               </div>
             )}
 
             {!error && items.length === 0 && (
-              <div className="text-white/60 text-sm">No captions found.</div>
+              <div className="text-sm text-black/55">No captions found.</div>
             )}
 
             {!error && items.length > 0 && (
               <VotingQueue items={items} />
             )}
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

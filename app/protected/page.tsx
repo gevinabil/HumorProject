@@ -12,46 +12,44 @@ export default async function ProtectedPage() {
   if (!data?.user) redirect("/");
 
   return (
-    <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-80 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(900px 500px at 15% 25%, rgba(99,102,241,.25), transparent 60%), radial-gradient(900px 500px at 85% 35%, rgba(236,72,153,.18), transparent 60%), radial-gradient(1100px 600px at 50% 100%, rgba(34,197,94,.10), transparent 55%)",
-        }}
-      />
+    <div className="startup-shell">
+      <div className="pointer-events-none absolute right-[-220px] top-32 h-72 w-[540px] rotate-12 bg-gradient-to-r from-[#ff1248] to-[#ff3d6e] opacity-20" />
 
       <div className="absolute top-6 right-6 z-10">
         <SignOutButton />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto pt-24 px-6">
-        <h1 className="text-6xl font-bold mb-4">Welcome back.</h1>
-        <p className="text-white/60 mb-12">Choose a week below.</p>
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pb-20 pt-24">
+        <p className="text-sm uppercase tracking-[0.2em] text-[#ff6f93]">Dashboard</p>
+        <h1 className="mt-3 text-6xl font-black uppercase tracking-tight">Welcome back.</h1>
+        <p className="mb-12 mt-4 text-white/65">Choose a week below.</p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-3">
           <Link
             href="/week-1"
-            className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl hover:bg-white/10 transition"
+            className="rounded-3xl border border-black/20 bg-[#f4f4f4] p-8 text-black shadow-[0_18px_55px_rgba(0,0,0,.35)] transition hover:-translate-y-1"
           >
-            <h2 className="text-2xl font-semibold mb-2">Week 1</h2>
-            <p className="text-white/50">Hello World</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#ff1248]">Week 1</p>
+            <h2 className="mt-2 text-2xl font-bold">Hello World</h2>
+            <p className="mt-2 text-black/60">Animated intro challenge</p>
           </Link>
 
           <Link
             href="/week-2"
-            className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl hover:bg-white/10 transition"
+            className="rounded-3xl border border-black/20 bg-[#f4f4f4] p-8 text-black shadow-[0_18px_55px_rgba(0,0,0,.35)] transition hover:-translate-y-1"
           >
-            <h2 className="text-2xl font-semibold mb-2">Week 2</h2>
-            <p className="text-white/50">Connecting the Database</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#ff1248]">Week 2</p>
+            <h2 className="mt-2 text-2xl font-bold">Database Read</h2>
+            <p className="mt-2 text-black/60">Connected Supabase listing</p>
           </Link>
 
           <Link
             href="/week-4"
-            className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl hover:bg-white/10 transition"
+            className="rounded-3xl border border-[#ff3d6e]/40 bg-[#ff1248] p-8 text-white shadow-[0_18px_55px_rgba(255,18,72,.35)] transition hover:-translate-y-1"
           >
-            <h2 className="text-2xl font-semibold mb-2">Week 4</h2>
-            <p className="text-white/50">Mutating Data (votes)</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/80">Week 4</p>
+            <h2 className="mt-2 text-2xl font-black">Mutating Data</h2>
+            <p className="mt-2 text-white/85">Caption voting experience</p>
           </Link>
         </div>
       </div>
