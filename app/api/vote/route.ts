@@ -33,13 +33,12 @@ export async function POST(req: Request) {
     // - profile_id (uuid)
     // - caption_id (uuid)
     // - vote_value (int)
-    const now = new Date().toISOString();
     const payload = {
       caption_id,
       profile_id: user.id,
       vote_value: vote,
-      created_datetime_utc: now,
-      modified_datetime_utc: now,
+      created_by_user_id: user.id,
+      modified_by_user_id: user.id,
     };
 
     let { error } = await supabase.from("caption_votes").insert(payload);
@@ -48,7 +47,7 @@ export async function POST(req: Request) {
     if (error?.code === "23505") {
       const updateRes = await supabase
         .from("caption_votes")
-        .update({ vote_value: vote, modified_datetime_utc: now })
+        .update({ vote_value: vote, modified_by_user_id: user.id })
         .eq("caption_id", caption_id)
         .eq("profile_id", user.id);
       error = updateRes.error;
