@@ -35,7 +35,7 @@ export default async function Week5Page() {
               Create Your Own.
             </h1>
             <p className="mt-4 max-w-xl text-white/62">
-              Upload an image and generate captions using the pipeline API.
+              This app writes a caption for your image. Upload one image, then click Generate Captions to get a result.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md">
@@ -51,7 +51,7 @@ export default async function Week5Page() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/58">
               Upload + Generate
             </p>
-            <p className="mt-1 text-sm font-semibold text-white/75">Presign, Upload, Register, Generate</p>
+            <p className="mt-1 text-sm font-semibold text-white/75">Follow the two steps below to create a caption.</p>
           </div>
 
           <div className="p-6 sm:p-8">
